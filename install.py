@@ -49,6 +49,44 @@ def copy_skill(dest: Path) -> None:
         shutil.copy2(py_file, scripts / py_file.name)
 
 
+def _prompt_scope() -> str | None:
+    """Prompt user for install scope. Returns 'user', 'repo', or None (skip)."""
+    print("\nWhere should the Claude Code skill be installed?")
+    print("  [1] User scope  — ~/.claude/skills/notebooklm/   (available in all projects)")
+    print("  [2] Repo scope  — .claude/skills/notebooklm/      (this project only)")
+    print("  [3] Skip")
+    while True:
+        choice = input("Enter choice [1/2/3]: ").strip()
+        if choice == "1":
+            return "user"
+        if choice == "2":
+            return "repo"
+        if choice == "3":
+            return None
+        print("  Invalid choice. Enter 1, 2, or 3.")
+
+
+def _confirm_overwrite(dest: Path) -> bool:
+    """Return True if user confirms overwrite of existing skill at dest."""
+    print(f"\nSkill already installed at: {dest}")
+    return input("Overwrite? [y/N]: ").strip().lower() == "y"
+
+
+def install_skill() -> None:
+    scope = _prompt_scope()
+    if scope is None:
+        print("Skipping skill install.")
+        return
+    dest = resolve_scope_path(scope)
+    if (dest / "SKILL.md").exists():
+        if not _confirm_overwrite(dest):
+            print("Skipping skill install.")
+            return
+    copy_skill(dest)
+    print(f"\nSkill installed to: {dest}")
+    print("To update the skill later, re-run: python install.py")
+
+
 def main():
     print("=" * 60)
     print("  NotebookLM-OnSteroids — Setup")
@@ -63,6 +101,11 @@ def main():
         [sys.executable, "-m", "playwright", "install", "chromium"],
         "Installing Chromium browser (used for Google login)",
     )
+
+    print("\n" + "=" * 60)
+    print("  Installing Claude Code skill")
+    print("=" * 60)
+    install_skill()
 
     print("\n" + "=" * 60)
     print("  Setup complete.")
