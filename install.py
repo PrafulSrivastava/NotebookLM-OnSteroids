@@ -72,7 +72,10 @@ def _prompt_scope() -> str | None:
 def _confirm_overwrite(dest: Path) -> bool:
     """Return True if user confirms overwrite of existing skill at dest."""
     print(f"\nSkill already installed at: {dest}")
-    return input("Overwrite? [y/N]: ").strip().lower() == "y"
+    try:
+        return input("Overwrite? [y/N]: ").strip().lower() == "y"
+    except EOFError:
+        return False
 
 
 def install_skill() -> None:
