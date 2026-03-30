@@ -9,39 +9,47 @@ Query any notebook, any sources — from a single lookup to a full multi-noteboo
 
 Requires: `notebooklm-on-steroids` installed via `python install.py` (see README).
 
-## CLI commands (available after install)
+## Scripts and CLI commands
 
-| Command | Purpose |
-|---------|---------|
-| `nblm-list` | List all notebooks, or all sources for a notebook |
-| `nblm-query` | Ask a single question to a notebook + sources |
-| `nblm-pipeline` | Run N legs across N notebooks, return all answers as JSON |
+The scripts for this skill are in the `scripts/` subdirectory alongside this `SKILL.md`.
+Claude Code injects the skill's base directory as:
+  `Base directory for this skill: <path>`
+Use that injected path to construct script invocations.
 
-Always prefix with `PYTHONUTF8=1` on Windows.
-
-### nblm-list
+**Primary (always works — relative to skill location):**
 ```bash
-PYTHONUTF8=1 nblm-list                      # → {notebooks: [{index, id, title}]}
-PYTHONUTF8=1 nblm-list --notebook 1         # → {notebook_title, sources: [{index, id, short_id, title}]}
-PYTHONUTF8=1 nblm-list --notebook "Shieldly"
+PYTHONUTF8=1 python "<base_dir>/scripts/nblm_list.py"
+PYTHONUTF8=1 python "<base_dir>/scripts/nblm_list.py" --notebook 1
+PYTHONUTF8=1 python "<base_dir>/scripts/nblm_list.py" --notebook "CRISPR"
 ```
 
-### nblm-query
 ```bash
-PYTHONUTF8=1 nblm-query --notebook 1 --question "What is the main finding?"
-PYTHONUTF8=1 nblm-query --notebook 1 --sources 2,5 --question "..."
-PYTHONUTF8=1 nblm-query --notebook 1 --question "..." --conv-id <uuid>   # follow-up
+PYTHONUTF8=1 python "<base_dir>/scripts/nblm_query.py" --notebook 1 --question "What is the main finding?"
+PYTHONUTF8=1 python "<base_dir>/scripts/nblm_query.py" --notebook 1 --sources 2,5 --question "..."
+PYTHONUTF8=1 python "<base_dir>/scripts/nblm_query.py" --notebook 1 --question "..." --conv-id <uuid>
 ```
-Returns: `{ notebook_title, question, sources_used, answer, conversation_id, references }`
 
-### nblm-pipeline
 ```bash
-PYTHONUTF8=1 nblm-pipeline --legs '[
+PYTHONUTF8=1 python "<base_dir>/scripts/nblm_pipeline.py" --legs '[
   {"notebook": 1, "sources": [1, 2], "question": "What are the behavioral triggers?"},
   {"notebook": 3, "sources": [4, 5], "question": "What are the red flags?"}
 ]'
 ```
-Returns: `{ pipeline: [{ leg, notebook_title, question, sources_used, answer, conversation_id, references, elapsed_ms }] }`
+
+**Convenience aliases (available only when pip-installed):**
+```bash
+PYTHONUTF8=1 nblm-list
+PYTHONUTF8=1 nblm-query --notebook 1 --question "..."
+PYTHONUTF8=1 nblm-pipeline --legs '[...]'
+```
+
+Returns:
+- `nblm-list` (no args): `{ notebooks: [{index, id, title}] }`
+- `nblm-list --notebook N`: `{ notebook_title, sources: [{index, id, short_id, title}] }`
+- `nblm-query`: `{ notebook_title, question, sources_used, answer, conversation_id, references }`
+- `nblm-pipeline`: `{ pipeline: [{ leg, notebook_title, question, sources_used, answer, conversation_id, references, elapsed_ms }] }`
+
+Always prefix with `PYTHONUTF8=1` on Windows.
 
 ---
 
