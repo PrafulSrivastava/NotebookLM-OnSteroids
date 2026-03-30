@@ -9,9 +9,9 @@ What it does:
   3. Prints next steps (notebooklm login)
 """
 
+import shutil
 import subprocess
 import sys
-import shutil
 from pathlib import Path
 
 
@@ -38,6 +38,15 @@ def resolve_scope_path(scope: str) -> Path:
     if scope == "repo":
         return _repo_root() / ".claude" / "skills" / SKILL_DEST_NAME
     raise ValueError(f"Unknown scope: {scope!r}")
+
+
+def copy_skill(dest: Path) -> None:
+    """Copy SKILL.md and nblm_skill/*.py into dest/scripts/."""
+    scripts = dest / "scripts"
+    scripts.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(_repo_root() / "SKILL.md", dest / "SKILL.md")
+    for py_file in (_repo_root() / "nblm_skill").glob("*.py"):
+        shutil.copy2(py_file, scripts / py_file.name)
 
 
 def main():
