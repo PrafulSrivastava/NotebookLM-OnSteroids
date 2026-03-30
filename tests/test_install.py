@@ -1,6 +1,6 @@
 from pathlib import Path
 import pytest
-from install import resolve_scope_path, SKILL_DEST_NAME
+from install import copy_skill, resolve_scope_path, SKILL_DEST_NAME
 
 
 def test_resolve_scope_user():
@@ -17,9 +17,6 @@ def test_resolve_scope_repo():
 def test_resolve_scope_invalid():
     with pytest.raises(ValueError, match="Unknown scope"):
         resolve_scope_path("invalid")
-
-
-from install import copy_skill
 
 
 def test_copy_skill_creates_structure(tmp_path):
