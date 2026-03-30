@@ -29,3 +29,6 @@ nblm-pipeline = "nblm_skill.nblm_pipeline:main"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["nblm_skill*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

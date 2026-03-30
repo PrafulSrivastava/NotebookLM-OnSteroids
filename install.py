@@ -11,6 +11,8 @@ What it does:
 
 import subprocess
 import sys
+import shutil
+from pathlib import Path
 
 
 def run(cmd: list[str], desc: str) -> None:
@@ -20,6 +22,22 @@ def run(cmd: list[str], desc: str) -> None:
     if result.returncode != 0:
         print(f"\n[ERROR] Command failed (exit {result.returncode}). Fix the error above and re-run install.py.")
         sys.exit(result.returncode)
+
+
+SKILL_DEST_NAME = "notebooklm"
+
+
+def _repo_root() -> Path:
+    return Path(__file__).parent
+
+
+def resolve_scope_path(scope: str) -> Path:
+    """Return destination directory for given scope ('user' or 'repo')."""
+    if scope == "user":
+        return Path.home() / ".claude" / "skills" / SKILL_DEST_NAME
+    if scope == "repo":
+        return _repo_root() / ".claude" / "skills" / SKILL_DEST_NAME
+    raise ValueError(f"Unknown scope: {scope!r}")
 
 
 def main():
