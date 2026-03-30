@@ -42,8 +42,9 @@ python install.py
 ```
 
 `install.py` handles everything:
-1. `pip install -e ".[browser]"` - installs the package and Playwright
-2. `playwright install chromium` - downloads the browser for Google login
+1. `pip install ".[browser]"` — installs the package and Playwright into site-packages
+2. `playwright install chromium` — downloads the browser for Google login
+3. **Claude Code skill install** — prompts you to install the skill at user scope (`~/.claude/skills/notebooklm/`) or repo scope (`.claude/skills/notebooklm/`), then copies `SKILL.md` and the scripts alongside it
 
 **Then authenticate once:**
 ```bash
@@ -104,18 +105,23 @@ All three commands output clean JSON to stdout. Errors go to stderr.
 
 ## Claude Code skill
 
-Copy `SKILL.md` into your Claude Code skills directory for full conversational support:
+`install.py` installs the skill automatically. When prompted, choose a scope:
 
-```
-~/.claude/skills/notebooklm/SKILL.md
-```
+| Scope | Location | When to use |
+|-------|----------|-------------|
+| User | `~/.claude/skills/notebooklm/` | Available in all your projects |
+| Repo | `.claude/skills/notebooklm/` | This project only |
+
+The installer copies `SKILL.md` and the scripts into the chosen location. Scripts are referenced relative to the skill's position, so the skill works regardless of where it is installed.
+
+To update the skill after pulling new changes, re-run `python install.py` and choose the same scope — it will ask before overwriting.
 
 Once installed, you can say things like:
 - *"List my notebooks"*
 - *"From notebook 1 sources 1 and 3, summarise the key findings"*
 - *"Run a pipeline: notebook 1 sources 1 and 2, ask about off-target mechanisms; notebook 2 sources 3 and 4, ask about adverse effects. Final: which genomic regions are highest risk?"*
 
-Claude handles intent parsing, runs the CLI commands, and synthesizes the results.
+Claude handles intent parsing, runs the scripts, and synthesizes the results.
 
 ---
 
