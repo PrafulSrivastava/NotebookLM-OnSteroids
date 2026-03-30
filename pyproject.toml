@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "notebooklm-on-steroids"
+version = "0.1.0"
+description = "Multi-notebook, multi-source research pipelines for NotebookLM — with a Claude Code skill"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "notebooklm-py>=0.3.4",
+    "httpx>=0.27.0",
+]
+
+[project.optional-dependencies]
+browser = [
+    "playwright>=1.40.0",
+]
+
+[project.scripts]
+nblm-list     = "nblm_skill.nblm_list:main"
+nblm-query    = "nblm_skill.nblm_query:main"
+nblm-pipeline = "nblm_skill.nblm_pipeline:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["nblm_skill*"]

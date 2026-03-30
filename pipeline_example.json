@@ -1,0 +1,12 @@
+[
+  {
+    "notebook": 1,
+    "sources": [1, 2],
+    "question": "What are the key behavioral findings relevant to women's safety app design?"
+  },
+  {
+    "notebook": 3,
+    "sources": [4, 5],
+    "question": "What are the most common red flags in founding team dynamics for early-stage startups?"
+  }
+]
