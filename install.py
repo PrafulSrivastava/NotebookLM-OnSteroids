@@ -4,7 +4,7 @@ One-command setup for NotebookLM-OnSteroids.
     python install.py
 
 What it does:
-  1. pip install -e ".[browser]"   — installs this package + playwright
+  1. pip install ".[browser]"   — installs this package + playwright
   2. playwright install chromium   — downloads the browser for login
   3. Prints next steps (notebooklm login)
 """
