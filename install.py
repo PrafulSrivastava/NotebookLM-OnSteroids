@@ -56,7 +56,10 @@ def _prompt_scope() -> str | None:
     print("  [2] Repo scope  — .claude/skills/notebooklm/      (this project only)")
     print("  [3] Skip")
     while True:
-        choice = input("Enter choice [1/2/3]: ").strip()
+        try:
+            choice = input("Enter choice [1/2/3]: ").strip()
+        except EOFError:
+            return None
         if choice == "1":
             return "user"
         if choice == "2":
@@ -73,6 +76,7 @@ def _confirm_overwrite(dest: Path) -> bool:
 
 
 def install_skill() -> None:
+    """Prompt user for scope, then copy SKILL.md and scripts to chosen location."""
     scope = _prompt_scope()
     if scope is None:
         print("Skipping skill install.")
@@ -82,7 +86,12 @@ def install_skill() -> None:
         if not _confirm_overwrite(dest):
             print("Skipping skill install.")
             return
-    copy_skill(dest)
+    try:
+        copy_skill(dest)
+    except FileNotFoundError as exc:
+        print(f"\n[ERROR] Skill source file not found: {exc}")
+        print("        Is SKILL.md and nblm_skill/ present in the repo root?")
+        return
     print(f"\nSkill installed to: {dest}")
     print("To update the skill later, re-run: python install.py")
 
