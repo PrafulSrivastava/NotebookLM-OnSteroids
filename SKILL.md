@@ -12,9 +12,9 @@ Requires: `notebooklm-on-steroids` installed via `python install.py` (see README
 ## Scripts and CLI commands
 
 The scripts for this skill are in the `scripts/` subdirectory alongside this `SKILL.md`.
-Claude Code injects the skill's base directory as:
-  `Base directory for this skill: <path>`
-Use that injected path to construct script invocations.
+Claude Code injects the skill's base directory into your system context as:
+  `Base directory for this skill: /actual/path/here`
+In the examples below, replace `<base_dir>` with that injected path.
 
 **Primary (always works — relative to skill location):**
 ```bash
@@ -48,8 +48,6 @@ Returns:
 - `nblm-list --notebook N`: `{ notebook_title, sources: [{index, id, short_id, title}] }`
 - `nblm-query`: `{ notebook_title, question, sources_used, answer, conversation_id, references }`
 - `nblm-pipeline`: `{ pipeline: [{ leg, notebook_title, question, sources_used, answer, conversation_id, references, elapsed_ms }] }`
-
-Always prefix with `PYTHONUTF8=1` on Windows.
 
 ---
 
@@ -99,7 +97,7 @@ Run this pipeline?
 ```
 
 **Step 2 — Execute legs**
-Run `nblm-pipeline --legs '[...]'`. Announce each leg briefly as it runs.
+Run `nblm-pipeline` (or `python <base_dir>/scripts/nblm_pipeline.py`) `--legs '[...]'`. Announce each leg briefly as it runs.
 
 **Step 3 — Synthesize in Claude's context**
 The `nblm-pipeline` script collects all leg answers. Claude then synthesizes:
@@ -141,8 +139,8 @@ The Final Answer is the highest-value output — not a summary, but a new answer
 
 | User says | Action |
 |-----------|--------|
-| "list notebooks" | `nblm-list` |
-| "list sources in notebook X" | `nblm-list --notebook X` |
+| "list notebooks" | `nblm-list` (or `python <base_dir>/scripts/nblm_list.py`) |
+| "list sources in notebook X" | `nblm-list --notebook X` (or `python <base_dir>/scripts/nblm_list.py --notebook X`) |
 | "switch to notebook X" | Set active notebook in session |
 | "re-run leg 2 with sources 6,7" | Re-run that leg, update `pipeline_results`, re-synthesize |
 | "new final question: [Q]" | Re-synthesize against existing `pipeline_results` |
@@ -153,6 +151,6 @@ The Final Answer is the highest-value output — not a summary, but a new answer
 ## Error handling
 
 - **Auth expired** → tell user to run `notebooklm login`
-- **Source number out of range** → re-run `nblm-list --notebook X`, show valid range
+- **Source number out of range** → re-run `nblm-list --notebook X` (or `python <base_dir>/scripts/nblm_list.py --notebook X`), show valid range
 - **Empty answer from a leg** → note it, continue pipeline, flag in Final Answer
 - **Ambiguous notebook** → show matches, ask user to confirm
