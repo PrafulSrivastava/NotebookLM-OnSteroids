@@ -1,6 +1,6 @@
 [build-system]
 requires = ["setuptools>=68", "wheel"]
-build-backend = "setuptools.backends.legacy:build"
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "notebooklm-on-steroids"
@@ -16,6 +16,9 @@ dependencies = [
 [project.optional-dependencies]
 browser = [
     "playwright>=1.40.0",
+]
+dev = [
+    "pytest>=8.0",
 ]
 
 [project.scripts]
