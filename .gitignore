@@ -15,7 +15,7 @@ env/
 .vscode/
 .idea/
 *.swp
-
+.claude/
 # OS
 .DS_Store
 Thumbs.db
