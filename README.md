@@ -57,6 +57,8 @@ This opens a browser. Sign in with the Google account that owns your notebooks. 
 
 ## CLI commands
 
+These commands are registered by `pip install ".[browser]"`. The Claude Code skill invokes the scripts directly and does not require them, but they are useful for testing from the terminal.
+
 ### List notebooks
 ```bash
 PYTHONUTF8=1 nblm-list
