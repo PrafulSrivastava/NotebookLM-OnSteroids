@@ -28,7 +28,7 @@ def main():
     print("=" * 60)
 
     run(
-        [sys.executable, "-m", "pip", "install", "-e", ".[browser]"],
+        [sys.executable, "-m", "pip", "install", ".[browser]"],
         "Installing package and dependencies",
     )
 
